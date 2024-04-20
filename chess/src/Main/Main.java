@@ -4,17 +4,17 @@ import javax.swing.JFrame;
 
 public class Main {
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Chess");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
+        JFrame window  = new JFrame("Chess test");
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setResizable(false);
 
-        GamePanel gamePanel = new GamePanel();
-        frame.add(gamePanel);
-        frame.pack();
+        GamePanel gp = new GamePanel();
+        window.add(gp);
+        window.pack();
 
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-        gamePanel.start();
+        window.setLocationRelativeTo(null);
+        window.setVisible(true);
 
+        gp.launchGame();
     }
 }

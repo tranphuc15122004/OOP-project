@@ -6,41 +6,38 @@ public class King extends Piece{
 
     public King(int color, int row, int col) {
         super(color, row, col);
-        //TODO Auto-generated constructor stub
         if(color == GamePanel.WHITE){
-            img = getImage("/piece_image/w_king");
-        }else{
-            img = getImage("/piece_image/b_king");
+            image = getImage("/piece_image/w_king");
+        } else {
+            image = getImage("/piece_image/b_king");
         }
     }
-
-    public boolean canMove(int moveRow, int moveCol){
-        if(isWithinBoard(moveRow, moveCol) && isSameSquare(moveRow, moveCol) == false){
-            if(Math.abs(this.preRow - moveRow) <= 1 && Math.abs(this.preCol - moveCol) <= 1){
-                if(isValidSquare(moveRow, moveCol)) return true;
+    public boolean canMove(int targetRow, int targetCol){
+        if(isWithinBoard(targetRow, targetCol) && isSamePosition(targetRow, targetCol) == false){
+            if(Math.abs(targetRow - preRow) <= 1 && Math.abs(targetCol - preCol) <= 1){
+                if(isValidSquare(targetRow, targetCol)){
+                    return true;
+                }
             }
-
-            //Castling
+            // castling
             if(!isMoved){
-                // Left
-                if(moveRow == this.preRow && moveCol == this.preCol - 2 && GamePanel.castlingRook == null && limitMovement_straight(moveRow, moveCol)){
+                //left castling
+                if(targetRow == preRow && targetCol == preCol - 2 && limitMovement_straight(targetRow, targetCol)){
                     for(Piece p: GamePanel.simPieces){
-                        if(p.row == this.preRow && p.col == this.preCol - 3){
+                        if(p instanceof Rook && p.color == color & p.row == preRow && p.isMoved == false && p.col == 1){
                             return false;
                         }
-
-                        if(p.color == this.color && p.row == this.preRow && p.col == this.preCol - 4 && p.isMoved == false){
-                            GamePanel.castlingRook = p;
+                        if(p instanceof Rook && p.color == color && p.isMoved == false && p.preRow == preRow && p.preCol == 0){
+                            GamePanel.castlingP = p;
                             return true;
                         }
                     }
                 }
-
-                //Right
-                if(moveRow == this.preRow && moveCol == this.preCol +2 && GamePanel.castlingRook == null && limitMovement_straight(moveRow, moveCol)){
-                    for(Piece p: GamePanel.simPieces){
-                        if(p.color == this.color && p.row == this.preRow && p.col == this.preCol + 3 && p.isMoved == false){
-                            GamePanel.castlingRook = p;
+                //right castling
+                if(targetRow == preRow && targetCol == preCol + 2 && limitMovement_straight(targetRow, targetCol)){
+                    for(Piece p : GamePanel.simPieces){
+                        if(p instanceof Rook && p.color == color && p.isMoved == false && p.preRow == preRow && p.preCol == 7){
+                            GamePanel.castlingP = p;
                             return true;
                         }
                     }
@@ -49,5 +46,4 @@ public class King extends Piece{
         }
         return false;
     }
-
 }

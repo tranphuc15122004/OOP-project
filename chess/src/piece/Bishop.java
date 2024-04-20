@@ -6,21 +6,18 @@ public class Bishop extends Piece{
 
     public Bishop(int color, int row, int col) {
         super(color, row, col);
-        //TODO Auto-generated constructor stub
         if(color == GamePanel.WHITE){
-            img = getImage("/piece_image/w_bishop");
-        }else{
-            img = getImage("/piece_image/b_bishop");
+            image = getImage("/piece_image/w_bishop");
+        } else {
+            image = getImage("/piece_image/b_bishop");
         }
     }
-
-    public boolean canMove(int moveRow, int moveCol){
-        if(isWithinBoard(moveRow, moveCol) && isSameSquare(moveRow, moveCol) == false){
-            if(isValidSquare(moveRow, moveCol)){
-                if(Math.abs(this.preRow - moveRow) == Math.abs(this.preCol - moveCol)){
-                    if(limitMovement_diagonal(moveRow, moveCol)){
-                        return true;
-                    }
+    
+    public boolean canMove(int targetRow , int targetCol){
+        if(isWithinBoard(targetRow, targetCol) && isSamePosition(targetRow, targetCol) == false){
+            if(Math.abs(targetRow - preRow) == Math.abs(targetCol - preCol)){
+                if(isValidSquare(targetRow, targetCol) && limitMovement_diagonal(targetRow, targetCol)){
+                    return true;
                 }
             }
         }
