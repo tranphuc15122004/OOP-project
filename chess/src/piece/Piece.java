@@ -49,10 +49,10 @@ public class Piece {
         return row * Board.SQUARE_SIZE;
     }
     public int getCol(int x){
-        return x / Board.SQUARE_SIZE;
+        return (x + Board.HALF_SQUARE_SIZE) / Board.SQUARE_SIZE;
     }
     public int getRow(int y){
-        return y / Board.SQUARE_SIZE;
+        return (y + Board.HALF_SQUARE_SIZE) / Board.SQUARE_SIZE;
     }
     public Piece getaffectedP(int targetRow, int targetCol){
         for(Piece p: GamePanel.simPieces){
@@ -200,4 +200,5 @@ public class Piece {
         }
         return true;
     }
+
 }

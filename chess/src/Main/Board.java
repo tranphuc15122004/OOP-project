@@ -13,7 +13,7 @@ public class Board {
         for(int row = 0; row < MAX_ROW; row++){
             for(int col = 0; col < MAX_COL; col++){
                 if((row + col) % 2 == 0){
-                    g2d.setColor(new Color( 0x8B4513));
+                    g2d.setColor(new Color(0x8B4513));
                 } else {
                     g2d.setColor(new Color(0xCD853F));
                 }

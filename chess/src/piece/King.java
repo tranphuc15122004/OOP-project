@@ -22,7 +22,7 @@ public class King extends Piece{
             // castling
             if(!isMoved){
                 //left castling
-                if(targetRow == preRow && targetCol == preCol - 2 && limitMovement_straight(targetRow, targetCol)){
+                if(targetRow == preRow && targetCol == preCol - 2 && limitMovement_straight(targetRow, targetCol) && isValidSquare(targetRow, targetCol) && isValidSquare(targetRow, targetCol -1)){
                     for(Piece p: GamePanel.simPieces){
                         if(p instanceof Rook && p.color == color & p.row == preRow && p.isMoved == false && p.col == 1){
                             return false;
@@ -34,7 +34,7 @@ public class King extends Piece{
                     }
                 }
                 //right castling
-                if(targetRow == preRow && targetCol == preCol + 2 && limitMovement_straight(targetRow, targetCol)){
+                if(targetRow == preRow && targetCol == preCol + 2 && limitMovement_straight(targetRow, targetCol) && isValidSquare(targetRow, targetCol)){
                     for(Piece p : GamePanel.simPieces){
                         if(p instanceof Rook && p.color == color && p.isMoved == false && p.preRow == preRow && p.preCol == 7){
                             GamePanel.castlingP = p;
