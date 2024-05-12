@@ -374,7 +374,7 @@ public class GamePanel extends JPanel implements Runnable{
         all_move.clear();
         for(int row = 0; row < Board.MAX_ROW; row++){
             for(int col  = 0 ; col < Board.MAX_COL; col++){
-                if(p.canMove(row, col)){
+                if(p.canMove(row, col)){    
                     if(checkingP == null){
                         all_move.add(new Pair<Integer, Integer>(row, col));
                     }
