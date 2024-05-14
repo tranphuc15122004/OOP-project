@@ -1,5 +1,7 @@
 package com.example.Game;
 
+import java.util.ArrayList;
+
 import com.example.Piece.Bishop;
 import com.example.Piece.King;
 import com.example.Piece.Knight;
@@ -10,14 +12,82 @@ import com.example.Piece.Rook;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.util.Pair;
 
-public class Rule extends GamePvP{
-    public Rule(GraphicsContext gc1, Mouse mouse , Canvas canvas) {
-        super(gc1, mouse, canvas);
+public class Rule {
+    GraphicsContext gc;
+    public static Board board = new Board();
+    static Mouse game_mouse = new Mouse();
+    Canvas c = new Canvas();
+    final static int FPS = 100;
+
+    //Background
+    static Image background = new Image(Rule.class.getResourceAsStream("/background/background.png"));
+
+    //StopWatch
+    static Stopwatch w_stopwatch = new Stopwatch();
+    static Stopwatch b_stopwatch = new Stopwatch();
+
+    //Color
+    public static final int WHITE = 0;
+    public static final int BLACK = 1;
+    public static int currentColor = WHITE;
+
+    //Pieces
+    public static ArrayList<Piece> pieces = new ArrayList<Piece>(); // original pieces, it can be known as real pieces on the board
+    public static ArrayList<Piece> simPieces = new ArrayList<Piece>(); // simulated pieces, it can be known as pieces in player's thinking phase
+    static ArrayList<Piece> promoPieces = new ArrayList<Piece>(); // pieces for promotion
+    public static Piece activeP; // activeP is the piece that player is holding, checkingP is the piece that is giving check
+    static Piece checkingP;
+    public static Piece castlingP; // the rook that is involved in castling
+    static ArrayList<Pair<Integer, Integer>> all_move = new ArrayList<>();// all possible moves of the active piece
+
+    //Boolean
+    boolean canMove; // if the piece can move to the target square
+    boolean validSquare; // if the target square is valid
+    static boolean isPromo; // if the player needs to promote the pawn
+    public static boolean gameOver; // if the game is over
+    static boolean stalemate; // if the game is in stalemate
+
+    
+    static void Timing(){
+        if(gameOver || stalemate) return;
+        if(currentColor == WHITE){
+            w_stopwatch.setSeconds(w_stopwatch.getSeconds() + 1);
+            if(w_stopwatch.getSeconds() == 60){
+                w_stopwatch.setMinutes(w_stopwatch.getMinutes() + 1);
+                w_stopwatch.setSeconds(0);
+            }
+        }
+        else{
+            b_stopwatch.setSeconds(b_stopwatch.getSeconds() + 1);
+            if(b_stopwatch.getSeconds() == 60){
+                b_stopwatch.setMinutes(b_stopwatch.getMinutes() + 1);
+                b_stopwatch.setSeconds(0);
+            }
+        }
     }
 
-    private static void changeTurn(){
+    public static void initialize_color(boolean isWhite ){
+        if (isWhite){
+            currentColor = WHITE;
+        }
+        else{
+            currentColor = BLACK;
+        }
+    }
+
+    // chưa test
+    static void setBackground(String path){
+        try {
+            background = new Image(Rule.class.getResourceAsStream("/background/" + path + ".png"));
+        } catch (Exception e) {
+            background = new Image(Rule.class.getResourceAsStream("/background/background.png"));
+        }
+    }
+
+    static void changeTurn(){
         currentColor = (currentColor == WHITE) ? BLACK : WHITE;
         for(Piece p: simPieces){
             if( currentColor == WHITE && p.color == WHITE){
@@ -26,6 +96,13 @@ public class Rule extends GamePvP{
             if( currentColor == BLACK && p.color == BLACK){
                 p._2squareMove = false;
             }
+        }
+    }
+
+    static void copyPieces( ArrayList<Piece> from, ArrayList<Piece> to){
+        to.clear();
+        for(int i = 0; i < from.size(); i++){
+            to.add(from.get(i));
         }
     }
 
@@ -95,14 +172,24 @@ public class Rule extends GamePvP{
     // Check if the king is in check and assign the checking piece to checkingP
     static boolean isKingInCheck(){
         Piece king = getKingPiece(true);
-        if(activeP.canMove(king.row, king.col)){
+        /* if(activeP.canMove(king.row, king.col)){
             checkingP = activeP;
             return true;
         }else{
             checkingP = null;
             return false;
+        } */
+        for(Piece p: simPieces){
+            if(p.color != king.color && p.canMove(king.row, king.col)){
+                checkingP = p;
+                return true;
+            }
         }
+        checkingP = null;
+        return false;
     }
+
+
 
     // Check if the opponent can capture the king
     static boolean opponentCanCaptureKing(){
@@ -291,24 +378,20 @@ public class Rule extends GamePvP{
         return false;
     }
 
+    // for drawing the possible moves of the active piece
     static void getAllMove(){
-        Piece p = GamePvP.activeP;
-        GamePvP.all_move.clear();
+        Piece p = activeP;
+        all_move.clear();
         for(int row = 0; row < Board.MAX_ROW; row++){
             for(int col  = 0 ; col < Board.MAX_COL; col++){
                 if(p.canMove(row, col)){
-                    if(GamePvP.checkingP == null){
-                        GamePvP.all_move.add(new Pair<Integer, Integer>(row, col));
+                    copyPieces(simPieces, pieces);
+                    p.row = row;
+                    p.col = col;
+                    if(opponentCanCaptureKing() == false || (row == checkingP.row && col == checkingP.col)){
+                        all_move.add(new Pair<Integer,Integer>(row, col));
                     }
-                    else{
-                        GamePvP.copyPieces(GamePvP.simPieces, GamePvP.pieces);
-                        p.row = row;
-                        p.col = col;
-                        if(opponentCanCaptureKing() == false || (row == GamePvP.checkingP.row && col == GamePvP.checkingP.col)){
-                            GamePvP.all_move.add(new Pair<Integer,Integer>(row, col));
-                        }
-                        GamePvP.copyPieces(GamePvP.pieces, GamePvP.simPieces);
-                    }
+                    copyPieces(pieces, simPieces);
                 } 
             }
         }    

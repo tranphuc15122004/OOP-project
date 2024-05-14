@@ -1,7 +1,5 @@
 package com.example.Game;
 
-import java.util.ArrayList;
-
 import com.example.Main;
 import com.example.Piece.Bishop;
 import com.example.Piece.King;
@@ -20,38 +18,7 @@ import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.FontWeight;
 import javafx.util.Pair;
 
-public class GamePvP {
-    GraphicsContext gc;
-    Board board = new Board();
-    static Mouse game_mouse = new Mouse();
-    Canvas c = new Canvas();
-    final int FPS = 60;
-
-    //StopWatch
-    Stopwatch w_stopwatch = new Stopwatch();
-    Stopwatch b_stopwatch = new Stopwatch();
-
-    //Color
-    public static final int WHITE = 0;
-    public static final int BLACK = 1;
-    public static int currentColor = WHITE;
-
-    //Pieces
-    public static ArrayList<Piece> pieces = new ArrayList<Piece>(); // original pieces, it can be known as real pieces on the board
-    public static ArrayList<Piece> simPieces = new ArrayList<Piece>(); // simulated pieces, it can be known as pieces in player's thinking phase
-    static ArrayList<Piece> promoPieces = new ArrayList<Piece>(); // pieces for promotion
-    public static Piece activeP; // activeP is the piece that player is holding, checkingP is the piece that is giving check
-    static Piece checkingP;
-    public static Piece castlingP; // the rook that is involved in castling
-    static ArrayList<Pair<Integer, Integer>> all_move = new ArrayList<>();// all possible moves of the active piece
-
-    //Boolean
-    boolean canMove; // if the piece can move to the target square
-    boolean validSquare; // if the target square is valid
-    static boolean isPromo; // if the player needs to promote the pawn
-    public static boolean gameOver; // if the game is over
-    boolean stalemate; // if the game is in stalemate
-
+public class GamePvP extends Rule{
 
     public GamePvP(GraphicsContext gc1 , Mouse mouse, Canvas canvas){
         gc = gc1;
@@ -61,7 +28,7 @@ public class GamePvP {
         copyPieces(pieces, simPieces);
     }
 
-    public void setPieces(){
+    public static void setPieces(){
         for(int i = 0; i < 8; i++){
             pieces.add(new Pawn(BLACK, 1, i));
             pieces.add(new Pawn(WHITE, 6, i));
@@ -84,12 +51,24 @@ public class GamePvP {
         } 
     }
 
-    static void copyPieces( ArrayList<Piece> from, ArrayList<Piece> to){
-        to.clear();
-        for(int i = 0; i < from.size(); i++){
-            to.add(from.get(i));
-        }
+    static public void reset(){
+        w_stopwatch.reset();
+        b_stopwatch.reset();
+        currentColor = WHITE;
+        pieces.clear();
+        simPieces.clear();
+        promoPieces.clear();
+        activeP = null;
+        checkingP = null;
+        castlingP = null;
+        all_move.clear();
+        isPromo = false;
+        gameOver = false;
+        stalemate = false;
+        setPieces();
+        copyPieces(pieces, simPieces);
     }
+
 
     public void gameloop(){
         new AnimationTimer() {
@@ -117,27 +96,9 @@ public class GamePvP {
         }.start();
     }
 
-    private void Timing(){
-        if(gameOver || stalemate) return;
-        if(currentColor == WHITE){
-            w_stopwatch.setSeconds(w_stopwatch.getSeconds() + 1);
-            if(w_stopwatch.getSeconds() == 60){
-                w_stopwatch.setMinutes(w_stopwatch.getMinutes() + 1);
-                w_stopwatch.setSeconds(0);
-            }
-        }
-        else{
-            b_stopwatch.setSeconds(b_stopwatch.getSeconds() + 1);
-            if(b_stopwatch.getSeconds() == 60){
-                b_stopwatch.setMinutes(b_stopwatch.getMinutes() + 1);
-                b_stopwatch.setSeconds(0);
-            }
-        }
-    }
-
     private void update(){
         if(isPromo){
-            Rule.promoting();
+            promoting();
         }else if(!gameOver && !stalemate){
             if(game_mouse.isPressed()){
 
@@ -147,7 +108,7 @@ public class GamePvP {
                             activeP = p;
                         }
                     }
-                    if(activeP != null) Rule.getAllMove();
+                    if(activeP != null) getAllMove();
                 }
                 else{
                     // if player holding a piece
@@ -166,10 +127,10 @@ public class GamePvP {
                             copyPieces(simPieces, pieces);
                             activeP.updatePosition();
                             // Check end game condition
-                            if(Rule.isKingInCheck() && Rule.isCheckmate()){
+                            if(isKingInCheck() && isCheckmate()){
                                     gameOver = true;
                             }
-                            else if(Rule.isKingInCheck() && Rule.isStalemate()){
+                            else if(isKingInCheck() &&isStalemate()){
                                 stalemate = true;
                             }
                             else{
@@ -177,7 +138,7 @@ public class GamePvP {
                                 if(castlingP != null){
                                     castlingP.updatePosition();
                                 }
-                                if(Rule.checkPromo()){
+                                if(checkPromo()){
                                     isPromo = true;
                                 }else{
                                     activeP = null;
@@ -195,19 +156,12 @@ public class GamePvP {
                 }
             }
         }
-    }
-
-    private void changeTurn() {
-        currentColor = (currentColor == WHITE) ? BLACK : WHITE;
-        for(Piece p: simPieces){
-            if( currentColor == WHITE && p.color == WHITE){
-                p._2squareMove = false;
-            }
-            if( currentColor == BLACK && p.color == BLACK){
-                p._2squareMove = false;
+        else if(gameOver || stalemate){
+            // this mouse event can be modified to any event
+            if(game_mouse.isPressed()){
+                reset();
             }
         }
-        throw new UnsupportedOperationException("Unimplemented method 'changeTurn'");
     }
 
     private void simulate(){
@@ -256,15 +210,21 @@ public class GamePvP {
             if(activeP.affectedP != null){
                 simPieces.remove(activeP.affectedP.getIndex());
             }
-            Rule.castling();
+            castling();
             // if player's king is not in check after the opponent's move, the move is valid
-            if(!Rule.isKingIllegalMove(activeP) && Rule.opponentCanCaptureKing() == false){
+            if(!isKingIllegalMove(activeP) && opponentCanCaptureKing() == false){
                 validSquare = true;
             }
         }
     }
 
     private void render(){
+        //Draw Background
+        gc.drawImage(background, 0, 0, Main.WIDTH, Main.HEIGHT);
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(10);
+        gc.strokeLine(800, 0, 800, Main.HEIGHT);
+
         //Draw Board
         Board.draw(gc);
 
@@ -367,13 +327,13 @@ public class GamePvP {
         //Stopwatch
         gc.setFill(Color.WHITE);
         gc.setGlobalAlpha(0.5);
-        gc.fillRect(800, 0, 300, 100);
-        gc.fillRect(800, 700, 300, 100);
+        gc.fillRoundRect(825, 10, 250, 80, 40, 40);
+        gc.fillRoundRect(825, 710, 250, 80 , 40 , 40);
         gc.setGlobalAlpha(1);
         gc.setFill(Color.BLACK);
         gc.setFont(Font.font("Arial", FontWeight.BOLD, 40));
-        gc.fillText(w_stopwatch.getTime(), 900, 760);
-        gc.fillText(b_stopwatch.getTime(), 900, 60);
+        gc.fillText(w_stopwatch.getTime(), 900, 763);
+        gc.fillText(b_stopwatch.getTime(), 900, 63);
     }
     
 }
