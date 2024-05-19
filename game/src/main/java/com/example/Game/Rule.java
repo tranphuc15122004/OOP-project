@@ -385,13 +385,18 @@ public class Rule {
         for(int row = 0; row < Board.MAX_ROW; row++){
             for(int col  = 0 ; col < Board.MAX_COL; col++){
                 if(p.canMove(row, col)){
-                    copyPieces(simPieces, pieces);
-                    p.row = row;
-                    p.col = col;
-                    if(opponentCanCaptureKing() == false || (row == checkingP.row && col == checkingP.col)){
+                    if(checkingP == null){
                         all_move.add(new Pair<Integer,Integer>(row, col));
                     }
-                    copyPieces(pieces, simPieces);
+                    else{
+                        copyPieces(simPieces, pieces);
+                        p.row =row;
+                        p.col = col;
+                        if(opponentCanCaptureKing() == false || (row == checkingP.row && col == checkingP.col)){
+                            all_move.add(new Pair<Integer,Integer>(row, col));
+                        }
+                        copyPieces(pieces, simPieces);
+                    }
                 } 
             }
         }    

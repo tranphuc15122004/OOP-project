@@ -128,7 +128,7 @@ public class GamePvP extends Rule{
                             activeP.updatePosition();
                             // Check end game condition
                             if(isKingInCheck() && isCheckmate()){
-                                    gameOver = true;
+                                gameOver = true;
                             }
                             else if(isKingInCheck() &&isStalemate()){
                                 stalemate = true;
@@ -326,7 +326,7 @@ public class GamePvP extends Rule{
 
         //Stopwatch
         gc.setFill(Color.WHITE);
-        gc.setGlobalAlpha(0.5);
+        gc.setGlobalAlpha(0.7);
         gc.fillRoundRect(825, 10, 250, 80, 40, 40);
         gc.fillRoundRect(825, 710, 250, 80 , 40 , 40);
         gc.setGlobalAlpha(1);

@@ -50,7 +50,7 @@ public class Main extends Application {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         GamePvP game  = new GamePvP(gc, mouse , canvas);
         game.gameloop();
-        game.board.set_BoardColor(1);            // Set color of the board
+        game.board.set_BoardColor(1);           // Set color of the board
         //game.initialize_color(false);            // Set the color of the first player
         
 
