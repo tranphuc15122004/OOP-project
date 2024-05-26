@@ -2,6 +2,7 @@ package com.example;
 
 import com.example.Game.GamePvP;
 import com.example.Game.Mouse;
+import com.example.Game.Puzzle;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -25,10 +26,10 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Chess");
         primaryStage.setResizable(false);
-        
+
         // Game scene
-        StackPane root= new StackPane();
-        Canvas canvas = new Canvas(WIDTH, HEIGHT );
+        StackPane root = new StackPane();
+        Canvas canvas = new Canvas(WIDTH, HEIGHT);
         root.getChildren().addAll(canvas);
         root.setStyle("-fx-background-color: black;");
         canvas.setOnMousePressed(e -> {
@@ -48,11 +49,11 @@ public class Main extends Application {
 
         // Có thể thay đổi game từ đây
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        GamePvP game  = new GamePvP(gc, mouse , canvas);
+        // GamePvP game = new GamePvP(gc, mouse , canvas);
+        Puzzle game = new Puzzle(gc, mouse, canvas);
         game.gameloop();
-        game.board.set_BoardColor(1);           // Set color of the board
-        //game.initialize_color(false);            // Set the color of the first player
-        
+        game.board.set_BoardColor(0); // Set color of the board
+        // game.initialize_color(false); // Set the color of the first player
 
         // Set up the scene
         scene = new Scene(root);
