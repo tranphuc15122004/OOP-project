@@ -41,7 +41,7 @@ public class Rule {
     public static Piece activeP; // activeP is the piece that player is holding, checkingP is the piece that is giving check
     static Piece checkingP;
     public static Piece castlingP; // the rook that is involved in castling
-    static ArrayList<Pair<Integer, Integer>> all_move = new ArrayList<>();// all possible moves of the active piece
+    public static ArrayList<Pair<Integer, Integer>> all_move = new ArrayList<>();// all possible moves of the active piece
 
     //Boolean
     boolean canMove; // if the piece can move to the target square

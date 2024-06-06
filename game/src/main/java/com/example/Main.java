@@ -1,5 +1,6 @@
 package com.example;
 
+import com.example.Game.GamePvB;
 import com.example.Game.GamePvP;
 import com.example.Game.Mouse;
 import com.example.Game.Puzzle;
@@ -49,8 +50,9 @@ public class Main extends Application {
 
         // Có thể thay đổi game từ đây
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        // GamePvP game = new GamePvP(gc, mouse , canvas);
-        Puzzle game = new Puzzle(gc, mouse, canvas);
+        GamePvP game = new GamePvP(gc, mouse , canvas);
+        //Puzzle game = new Puzzle(gc, mouse, canvas);
+        //GamePvB game = new GamePvB(gc, mouse, canvas);
         game.gameloop();
         game.board.set_BoardColor(0); // Set color of the board
         // game.initialize_color(false); // Set the color of the first player

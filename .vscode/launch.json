@@ -5,7 +5,21 @@
     "version": "0.2.0",
     "configurations": [
 
-
+        {
+            "type": "java",
+            "name": "MainMenu",
+            "request": "launch",
+            "mainClass": "com.example.MainMenu",
+            "projectName": "game",
+            "vmArgs": "--module-path \"C:\\Users\\Admin\\javafx-sdk-22.0.1\\lib\" --add-modules javafx.controls,javafx.fxml"
+        },
+        {
+            "type": "java",
+            "name": "Api_call",
+            "request": "launch",
+            "mainClass": "com.example.Game.Api_call",
+            "projectName": "game"
+        },
         {
             "type": "java",
             "name": "Main",
