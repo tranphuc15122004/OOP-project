@@ -308,6 +308,11 @@ public class GamePvB extends Rule {
                                 while (true) {
                                     botCapture(endRow, endCol);
                                     int isMoved = botMove(p, startRow, startCol, endRow, endCol);
+                                    if (move.equals("e8c8") && p instanceof Rook) {
+                                        botMove(p, 0, 0, 0, 3);
+                                    } else if (move.equals("e8g8") && p instanceof Rook) {
+                                        botMove(p, 0, 0, 0, 3);
+                                    }
                                     if (isMoved == 1) break;
                                 }
                                 break;
@@ -481,7 +486,7 @@ public class GamePvB extends Rule {
         // Draw Board
         Board.draw(gc);
         if(!gameOver && !stalemate ){
-            if(moveIndex >= 1){
+            if(moveIndex > 1){
                 String premove = moves[0];
                 int temp1 = getColFromMove(premove.charAt(0));
                 int temp2= 8 - Character.getNumericValue(premove.charAt(1));

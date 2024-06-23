@@ -15,10 +15,10 @@ import javafx.util.Pair;
 import org.asynchttpclient.*;
 
 public class Api_call {
-    public static void main(String[] args) {
+    /* public static void main(String[] args) {
         List<String> fenAndMoves = getFenAndMoves("8/pp2kppp/4p3/6P1/P1n5/2r5/1r5P/K4R2 w KQkq - - 0 1");
         System.out.println(fenAndMoves);
-    }
+    } */
 
     public static ArrayList<String> getFenAndMoves(String fen) {
             ArrayList<String> fenAndMoves = new ArrayList<>();

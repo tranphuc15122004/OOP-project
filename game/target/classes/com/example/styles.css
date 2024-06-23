@@ -1,0 +1,42 @@
+/* styles.css */
+.overlay {
+    -fx-background-color: rgba(0, 0, 0, 0.5); /* Màu phủ mờ */
+    -fx-padding: 20;
+}
+.button {
+    -fx-background-color: linear-gradient(#f0ff35, #a9ff00);
+    -fx-background-radius: 30;
+    -fx-background-insets: 0;
+    -fx-text-fill: #654b00;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20 10 20;
+    -fx-font-size: 14px;
+    -fx-border-color: #6b8e23;
+    -fx-border-radius: 30;
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 0);
+    -fx-cursor: hand;
+    -fx-transition: all 0.3s ease-in-out;
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(#a9ff00, #f0ff35);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 10, 0, 0, 0);
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+.label-title {
+    -fx-font-size: 120px;
+    -fx-text-fill: linear-gradient(from 0% 0% to 100% 100%, #79ff50, #1aff00);
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.75) , 5,0.5,0,1 );
+}
+
+.button:pressed {
+    -fx-background-color: linear-gradient(#a9ff00, #f0ff35);
+    -fx-effect: innershadow(three-pass-box, rgba(0,0,0,0.6), 10, 0, 0, 2);
+    -fx-scale-x: 1.0;
+    -fx-scale-y: 1.0;
+    -fx-transition: all 0.1s ease-in-out;
+}
+
