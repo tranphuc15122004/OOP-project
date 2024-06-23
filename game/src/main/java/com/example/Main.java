@@ -43,12 +43,8 @@ public class Main extends Application {
         this.primaryStage = primaryStage;
         intMainmenu(primaryStage);
     }
+
     private void intMainmenu(Stage primaryStage){
-        
-        primaryStage.setTitle("Chess");
-        primaryStage.setResizable(false);
-        
-        
         Button PvBotButton = createButton("file:game/src/main/resources/pvbot_button.png");
         Button btnPlay = createButton("file:game/src/main/resources/play_button.png");
         Button PuzzleButton = createButton("file:game/src/main/resources/puzzle_button.png");
@@ -58,20 +54,20 @@ public class Main extends Application {
         BackgroundImage bgImage = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,  new BackgroundSize(100, 100, true, true, false, true));
         btnPlay.setOnAction(event -> {
             gameMode = "PvP";
-            primaryStage.hide();
+            //primaryStage.hide();
             gameLoop(primaryStage);
         });
         PvBotButton.setOnAction(event -> {
             gameMode = "PvB";
-            primaryStage.hide();
+            //primaryStage.hide();
             gameLoop(primaryStage);
         });
         PuzzleButton.setOnAction(event ->{
             gameMode = "Puzzle";
-            primaryStage.hide();
+            //primaryStage.hide();
             gameLoop(primaryStage);
         });
-       
+        
         VBox centerButtons = new VBox(0);
         centerButtons.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
         centerButtons.getChildren().addAll(btnPlay, PvBotButton,PuzzleButton);
@@ -83,7 +79,7 @@ public class Main extends Application {
         Label nLabel = new Label("Start Game");
         nLabel.getStyleClass().add("label-title");
         HBox topTextLayout = new HBox(nLabel);
-       topTextLayout.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+        topTextLayout.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
         topTextLayout.setAlignment(Pos.TOP_CENTER);
         
         scene = new Scene(root);
@@ -92,7 +88,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-        
+    
     
     private Button createButton(String imagePath) {
         Image image = new Image(imagePath);
@@ -102,12 +98,12 @@ public class Main extends Application {
             imageView.setFitHeight(60);
         }
         else
-       { imageView.setFitWidth(150);
+        { imageView.setFitWidth(150);
         imageView.setFitHeight(60);}
         Button button = new Button();
         button.setGraphic(imageView);
         button.setStyle("-fx-background-color: transparent;");
-       
+        
         return button;
     }
 
@@ -134,7 +130,7 @@ public class Main extends Application {
                 
                 scene = new Scene(root1);
                 primaryStage1.setScene(scene);
-                primaryStage1.show();
+                //primaryStage1.show();
                 
                 break;
             
@@ -156,8 +152,8 @@ public class Main extends Application {
                 
                 scene = new Scene(root2);
                 primaryStage1.setScene(scene);
-                primaryStage1.show();
-               
+                //primaryStage1.show();
+                
                 break;
                 
             case "Puzzle":
@@ -177,7 +173,7 @@ public class Main extends Application {
                 
                 scene = new Scene(root3);
                 primaryStage1.setScene(scene);
-                primaryStage1.show();
+                //primaryStage1.show();
                 
                 break;
     
